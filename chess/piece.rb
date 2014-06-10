@@ -127,9 +127,8 @@ class Pawn < Piece
   PDIRS = [[0, -1], [1, -1], [-1, -1]]
   PDIAGS = [[1, -1], [-1, -1]]
   
-  valid_moves = []
-  
   def move_dirs
+    valid_moves = []
     if color == "white" 
       directions = PDIRS.map {|x| x.map {|coord| coord * -1} }
       diagonals = PDIAGS.map {|x| x.map {|coord| coord * -1} }
@@ -137,27 +136,26 @@ class Pawn < Piece
       directions = PDIRS
       diagonals = PDIAGS      
     end
-    
-    # direction.each do |dir|
-#       x_mod, y_mod = dir[0], dir[1]
-#       current_x, current_y = position
-#       new_x, new_y = (x_mod + current_x), (y_mod + current_y)
-#       if (new_x >= 0 && new_x < 8) && (new_y >= 0 && new_y < 8)
-#         if current_piece.nil?
-#           valid_moves << [new_x, new_y]
-#         end
-
-
-        directions.each do |dir|
-          x_mod, y_mod = dir[0], dir[1]
-          current_x, current_y = position
-          new_x, new_y = (x_mod + current_x), (y_mod + current_y)
-          current_piece = @board[new_x][new_y]
-          if (new_x >= 0 && new_x < 8) && (new_y >= 0 && new_y < 8)
-            if diagonals.include?(dir)
-              valid_moves << current_piece unless current_piece.nil?
-      
+    directions.each do |dir|
+      x_mod, y_mod = dir[0], dir[1]
+      current_x, current_y = position
+      new_x, new_y = (x_mod + current_x), (y_mod + current_y)
+      current_piece = @board[new_x][new_y]
+      if (new_x >= 0 && new_x < 8) && (new_y >= 0 && new_y < 8)
+        if diagonals.include?(dir)
+          valid_moves << current_piece unless 
+          current_piece.nil? || current_piece.color == color
+        else
+          if current_piece.color == self.color
+          else
+            valid_moves << [new_x, new_y]
+          end
+        end
+      end
+    end
+    valid_moves    
   end 
+end
       
 
 
