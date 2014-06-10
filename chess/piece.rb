@@ -3,7 +3,7 @@ class Piece
   DIAG = [[-1, 1], [1, 1], [1, -1], [-1, -1]]
 
   
-  attr_reader :color
+  attr_reader :color, :position
   
   def inititalize(board, position, color)
     @color = color
@@ -28,19 +28,14 @@ class SlidingPiece < Piece
       1.upto(7) do |multiplier|
         x_mod, y_mod = dir[0] * multiplier, dir[1] * multiplier
         current_x, current_y = position
-        new_x, new_y = (x_mod + current_x), (y_mod + current_y)
-        current_piece = @board[new_x][new_y]
-        if (new_x >= 0 && new_x < 8) && (new_y >= 0 && new_y < 8)
-          if current_piece.nil?
-            valid_moves << [new_x, new_y]
-          else 
-            if current_piece.color == self.color
-              break
-            else
-              valid_moves << [new_x, new_y]
-              break
-            end
-          end
+        pos = [(x_mod + current_x), (y_mod + current_y)]
+        
+        if @board.valid_move?(pos)
+          valid_moves << pos
+        elsif @board.capturable?(pos, self.color)
+          valid_moves << pos
+        else
+          break
         end
       end
     end
@@ -51,7 +46,7 @@ end
 
 class Queen < SlidingPiece   
   def move_dirs
-    ORTH.concat(DIAG)
+    ORTH + DIAG
   end 
 end
 
@@ -79,20 +74,20 @@ class SteppingPiece < Piece
     move_dirs.each do |dir|
       x_mod, y_mod = dir[0], dir[1]
       current_x, current_y = position
-      new_x, new_y = (x_mod + current_x), (y_mod + current_y)
-      current_piece = @board[new_x][new_y]
-      if (new_x >= 0 && new_x < 8) && (new_y >= 0 && new_y < 8)
-        if current_piece.nil?
-          valid_moves << [new_x, new_y]
-        else 
-          if current_piece.color == self.color
-            break
-          else
-            valid_moves << [new_x, new_y]
-            break
-          end
-        end
+      pos = [(x_mod + current_x), (y_mod + current_y)]
+      
+      if @board.valid_move?(pos)
+        valid_moves << pos
+      elsif capturable?(pos, self.color)
+        valid_moves << pos
+      else
+        break
       end
+    end
+  end
+  valid_moves
+end
+
     end
     valid_moves
   end               
@@ -124,8 +119,22 @@ end
 
 
 class Pawn < Piece
+  
+  def initialize(has_moved = false, board, position, color)
+    super(board, position, color)
+    @has_moved = has_moved
+  end
+  
   PDIRS = [[0, -1], [1, -1], [-1, -1]]
   PDIAGS = [[1, -1], [-1, -1]]
+  
+  def has_moved? 
+    @has_moved
+  end
+  
+  def step_forward
+    color == "white" ? -1 : 1
+  end
   
   def move_dirs
     valid_moves = []
@@ -140,18 +149,22 @@ class Pawn < Piece
       x_mod, y_mod = dir[0], dir[1]
       current_x, current_y = position
       new_x, new_y = (x_mod + current_x), (y_mod + current_y)
-      current_piece = @board[new_x][new_y]
-      if (new_x >= 0 && new_x < 8) && (new_y >= 0 && new_y < 8)
-        if diagonals.include?(dir)
-          valid_moves << current_piece unless 
-          current_piece.nil? || current_piece.color == color
-        else
-          if current_piece.color == self.color
-          else
-            valid_moves << [new_x, new_y]
-          end
-        end
-      end
+      pos = [new_x][new_y]
+      current_peice
+      
+      # if (new_x >= 0 && new_x < 8) && (new_y >= 0 && new_y < 8)
+#         if diagonals.include?(dir)
+#           valid_moves << current_piece unless 
+#           current_piece.nil? || current_piece.color == color
+#         else
+#           if current_piece.color == self.color
+#           else
+#             valid_moves << [new_x, new_y]
+#           end
+#         end
+#       end
+
+
     end
     valid_moves    
   end 
