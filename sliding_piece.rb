@@ -2,21 +2,21 @@ require './piece.rb'
 
 class SlidingPiece < Piece
   
-  def move
+  def moves
     valid_moves = []
     move_dirs.each do |dir|
       1.upto(7).each do |multi|
         xmod, ymod = dir[0] * multi, dir[1] * multi
         new_x, new_y = (xmod + @position[0]), (ymod + @position[1])
         new_pos = [new_x, new_y]
-        break unless @game.in_range?(new_pos)
-        if @game[new_x, new_y].nil?
+        break unless @board.in_range?(new_pos)
+        if @board[new_x, new_y].nil?
           valid_moves << new_pos
-        elsif @game.capturable?(new_pos, color)
+        elsif @board.capturable?(new_pos, color)
           valid_moves << new_pos
           break
         else
-          break
+          next
         end
       end 
     end
