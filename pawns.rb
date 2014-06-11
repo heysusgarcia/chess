@@ -25,7 +25,7 @@ class Pawn < Piece
     valid_moves << new_pos if @game.in_range?(new_pos) && @game[new_x, new_y].nil?
     
     valid_moves += check_diags
-    valid_moves << two_space unless @has_moved
+    valid_moves += two_space unless @has_moved
   end
   
   def check_diags
@@ -45,7 +45,7 @@ class Pawn < Piece
     unless @has_moved
       two_space_x, two_space_y =(@position[0] += @step[0]*2), @position[1]
       two_space_move = [two_space_x, two_space_y]
-      return two_space_move if @game.in_range?(two_space_move) && 
+      return [two_space_move] if @game.in_range?(two_space_move) && 
         @game[two_space_x, two_space_y].nil?
       end
       []
