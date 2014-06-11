@@ -53,18 +53,29 @@ class Board
   end
   
   def in_check?(color)
-    0.upto(7).each do |row|
-      
+    king_pos = find_king(color)
+    @board.each do |row|
+      row.each do |piece|
+        next if piece.nil?
+        return true if piece.move.include?(king_pos) && piece.color != color
+      end
+    end
+    false
+  end
+  
+  def find_king(color)
+    @board.each_with_index do |row, ind1|
+      row.each_with_index do |piece, ind2|
+        if piece.is_a?(King) && piece.color == color
+          return [ind1, ind2]
+        end
+      end
     end
   end
      
 end
 
 a = Board.new
-a.render
-# c = Pawn.new(a, [7,3], :w)
-# a[7,3] = c
 
-b = Pawn.new(a, [3,1], :b)
-p b.move
+p a.find_king(:b)
 

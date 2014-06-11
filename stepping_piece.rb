@@ -20,9 +20,6 @@ class SteppingPiece < Piece
   
 end
 
-
-
-
 class King < SteppingPiece
   
   def initialize(board, position, color)

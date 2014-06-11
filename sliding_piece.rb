@@ -26,10 +26,6 @@ class SlidingPiece < Piece
 end
 
 
-
-
-
-
 class Queen < SlidingPiece
   
   def initialize(board, position, color)
