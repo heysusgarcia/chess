@@ -16,7 +16,7 @@ class SlidingPiece < Piece
           valid_moves << new_pos
           break
         else
-          next
+          break
         end
       end 
     end

@@ -104,8 +104,7 @@ class Board
   
   def checkmate?(color)
     return false unless in_check?(color)
-    same_color = get_pieces(color)
-    p same_color.all? { |piece| piece.valid_moves.empty?}
+    get_pieces(color).all? { |piece| piece.valid_moves.empty? }
 
   end
   
